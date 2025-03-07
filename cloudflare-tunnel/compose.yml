@@ -3,7 +3,8 @@ services:
     container_name: "tunnel"
     image: cloudflare/cloudflared:latest
     command: tunnel run --token ${TOKEN}
-    network: public-tunnel
+    networks: 
+      public-tunnel
 
 networks:
   public-tunnel:
