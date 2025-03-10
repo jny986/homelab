@@ -17,7 +17,7 @@ services:
       - "TRAEFIK_ENTRYPOINTS_HTTPS_HTTP_TLS_DOMAINS=${DOMAIN}"
       - "TRAEFIK_ENTRYPOINTS_HTTPS_HTTP_TLS_DOMAINS=*.{DOMAIN}"
     volumes:
-      - "etc/localtime:/etc/localtime"
+      - "/etc/localtime:/etc/localtime"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "./traefik.yml:/traefik.yml:ro"
       - "./config.yml:/config.yml:ro"
