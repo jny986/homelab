@@ -19,8 +19,8 @@ services:
     volumes:
       - "/etc/localtime:/etc/localtime"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
-      - "./traefik.yml:/traefik.yml:ro"
-      - "./config.yml:/config.yml:ro"
+      - "traefik.yml:/traefik.yml:ro"
+      - "config.yml:/config.yml:ro"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.traefik.entrypoints=http"
