@@ -5,7 +5,7 @@ services:
     container_name: "traefik"
     restart: unless-stopped
     security_opt:
-      no-new-privileges: true
+      - "no-new-privileges=true"
     ports:
       - "80:80"
       - "443:443"
