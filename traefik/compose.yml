@@ -54,9 +54,9 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.traefik.rule=Host(`traefik.${DOMAIN}`)"
+      - "traefik.http.routers.frontend.entrypoints=traefik"
       - "traefik.http.routers.traefik.service=api@internal"
       - "traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto=https"
-      - "traefik.http.services.traefil.loadbalancer.server.port=9000"
       - "traefik.http.routers.traefik.tls=true"
 
 networks:
