@@ -17,3 +17,8 @@ services:
 
 volumes:
   portainer-data:
+
+
+networks:
+  proxy:
+    external: true
