@@ -63,3 +63,4 @@ networks:
   public-tunnel:
     external: true
   proxy:
+    name: proxy

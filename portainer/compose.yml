@@ -31,4 +31,5 @@ volumes:
 
 networks:
   proxy:
+    name: traefik_proxy
     external: true
