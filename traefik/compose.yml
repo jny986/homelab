@@ -39,7 +39,7 @@ services:
       - --certificatesresolvers.letsencrypt.acme.caserver=${CA_SERVER}
       - --certificatesresolvers.letsencrypt.acme.email=${CF_API_EMAIL}
       - --certificatesresolvers.letsencrypt.acme.storage=acme.json
-      - --certificatesresolvers.letsencrypt.acme.dnschallenge.provider=cloudflase
+      - --certificatesresolvers.letsencrypt.acme.dnschallenge.provider=cloudflare
       - --certificatesresolvers.letsencrypt.acme.dnschallenge.delayBeforeCheck=30
       - --certificatesresolvers.letsencrypt.acme.dnschallenge.resolvers=9.9.9.9:53,1.1.1.1:53
       # Servers Transport
