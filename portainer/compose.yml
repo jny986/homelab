@@ -9,6 +9,11 @@ services:
       - portainer-data:/data
       - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.portainer.rule=Host(`portainer.${DOMAIN}`)"
+      - "traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto=https"
+      - "traefik.http.routers.portainers.tls=true"
 
 volumes:
   portainer-data:
