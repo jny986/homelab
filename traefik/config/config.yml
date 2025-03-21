@@ -1,7 +1,0 @@
-tls:
-  options:
-    default:
-      minVersion: VersionTLS13
-      alpnProtocols:
-        - h2
-        - http/1.1

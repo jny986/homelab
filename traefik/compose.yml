@@ -22,17 +22,49 @@ services:
       - "/etc/localtime:/etc/localtime"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "./config:/config"
+    command:
+      # Dashboard
+      - --api.dashboard=true
+      - --api.debug=true
+      - --api.insecure=true
+      # Entrypoints
+      - --entrypoints.web.address=:80
+      - --entrypoints.web.http.redirections.entrypoint.to=websecure
+      - --entrypoints.web.http.redirections.entrypoint.scheme=https
+      - --entrypoints.websecure.address=:443
+      - --entrypoints.websecure.http.tls=true
+      - --entrypoints.websecure.http.tls.certResolver=letsencrypt
+      - --entrypoints.websecure.http.tls.domains[0].main=${DOMAIN}
+      - --entrypoints.websecure.http.tls.domains[0].sans=*.${DOMAIN}
+      # ACME Config
+      - --certificatesresolvers.letsencrypt.acme.caserver=${CA_SERVER}
+      - --certificatesresolvers.letsencrypt.acme.email=${CF_API_EMAIL}
+      - --certificatesresolvers.letsencrypt.acme.storage=acme.json
+      - --certificatesresolvers.letsencrypt.acme.dnschallenge.provider=cloudflase
+      - --certificatesresolvers.letsencrypt.acme.dnschallenge.delayBeforeCheck=30
+      - --certificatesresolvers.letsencrypt.acme.dnschallenge.resolver=9.9.9.9:53
+      # Servers Transport
+      - --tcpserverstransport.insecureSkipVerify=true
+      # Providers
+      - --providers.docker=true
+      - --providers.docker.endpoint=unix///var/run/docker.sock
+      - --providers.docker.exposedbydefault=false
+      - --providers.docker.watch=true
+      - --providers.docker.network=proxy
+      # Access Logs
+      - --accesslog.
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.traefik.entrypoints=http"
       - "traefik.http.routers.traefik.rule=Host(`traefik.${DOMAIN}`)"
       - "traefik.http.routers.traefik.service=api@internal"
-      - "traefik.http.middlewares.traefik.redirectscheme.xscheme=https"
       - "traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto=https"
-      - "traefik.http.routers.traefik.entrypoints=https"
       - "traefik.http.routers.traefik.tls=true"
 
 networks:
   public-tunnel:
     external: true
   proxy:
+
+
+volumes:
+  traefik_data:
