@@ -52,7 +52,7 @@ services:
       - --providers.docker.watch=true
       - --providers.docker.network=proxy
       # Access Logs
-      - --accesslog.
+      - --accesslog=true
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.traefik.rule=Host(`traefik.${DOMAIN}`)"
