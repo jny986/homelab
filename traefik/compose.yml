@@ -16,6 +16,8 @@ services:
     environment:
       - "TRAEFIK_ENTRYPOINTS_HTTPS_HTTP_TLS_DOMAINS=${DOMAIN}"
       - "TRAEFIK_ENTRYPOINTS_HTTPS_HTTP_TLS_DOMAINS=*.${DOMAIN}"
+      - "CF_API_EMAIL=${CF_API_EMAIL}"
+      - "CF_DNS_API_TOKEN=${CF_DNS_API_TOKEN}"
     volumes:
       - "/etc/localtime:/etc/localtime"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"

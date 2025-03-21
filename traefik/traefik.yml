@@ -25,6 +25,7 @@ certificateResolver:
     acme:
       storage: "acme.json"
       caServer: "https://acme-staging-v02.api.letsencrypt.org/directory"
+      email: ${CF_API_EMAIL}
       dnsChallenge:
         provider: cloudflare
         delayBeforeCheck: 0
