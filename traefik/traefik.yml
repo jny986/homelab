@@ -11,28 +11,33 @@ entrypoints:
         entryPoint:
           to: https
           scheme: https
-    https:
-      address: ":443"
-      http:
-        tls:
-          certResolver: "letsEncrypt"
-          domains:
-            - ${domain}
+  https:
+    address: ":443"
+    http:
+      tls:
+        certResolver: "letsEncrypt"
+        domains:
+          - main: "${DOMAIN}"
+            sans: "*.${DOMAIN}"
 
 certificateResolver:
   letsEncrypt:
     acme:
       storage: "acme.json"
+      caServer: "https://acme-staging-v02.api.letsencrypt.org/directory"
       dnsChallenge:
         provider: cloudflare
         delayBeforeCheck: 0
+        resolvers:
+          - "9.9.9.9:53"
+          - "1.1.1.1:53"
 
 serversTransport:
   insecureSkipVerify: true
 
 providers:
   docker:
-    entrypoint: "unix///var/run/docker.sock"
+    endpoint: "unix///var/run/docker.sock"
     exposedByDefault: false
     watch: true
     network: proxy
@@ -40,4 +45,4 @@ providers:
     filename: /config.yaml
     watch: true
 
-accessLoh: {}
+accessLog: {}
