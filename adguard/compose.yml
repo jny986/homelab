@@ -1,17 +1,23 @@
 services:
-  pihole:
-    container_name: pihole
-    image: pihole/pihole:latest
+  adguard:
+    container_name: adguard
+    image: adguard/adguardhome
     ports:
       - "53:53/tcp"
       - "53:53/udp"
       - "8001:80/tcp"
-      - "8443:443/tcp"
+      - "4431:443/tcp"
+      - "4431:443/udp"
+      - "853:853/tcp"
+      - "3000:3000"
+      - "5443:5443/tcp"
+      - "5443:5443/udp"
     environment:
-      TZ: 'Australia/Adelaide'
-      FTLCONF_webserver_api_password: "${PIHOLE_API_PASSWORD}"
+      TZ: "Australia/Adelaide"
+
     volumes:
-      - 'pihole:/etc/pihole'
+      - "adguard:/opt/adguardhome/work"
+      - "$HOME/adguard/config:/opt/adguardhome/conf"
     cap_add:
       - SYS_NICE
     restart: unless-stopped
@@ -20,7 +26,7 @@ services:
       - "traefik.http.routers.pihole.rule=Host(`${DOMAIN}`)"
       - "traefik.http.routers.pihole.entrypoints=websecure"
       - "traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto=https"
-      - "traefik.http.services.pihole.loadbalancer.server.port=443"
+      - "traefik.http.services.pihole.loadbalancer.server.port=3000"
       - "traefik.http.routers.pihole.service=pihole"
       - "traefik.http.routers.pihole.tls=true"
 
@@ -29,4 +35,4 @@ networks:
     external: true
 
 volumes:
-  pihole:
+  adguard:
