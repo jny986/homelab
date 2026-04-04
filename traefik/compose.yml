@@ -2,59 +2,28 @@ services:
 
   traefik:
     image: traefik:latest
-    container_name: "traefik"
+    container_name: traefik
     restart: unless-stopped
     security_opt:
-      - "no-new-privileges=true"
+      - no-new-privileges=true
     ports:
-      - "80:80"
-      - "443:443"
-      - "8080:8080"
+      - 80:80
+      - 443:443
+      - 8080:8080
     networks:
       - public-tunnel
       - proxy
     environment:
-      - "TRAEFIK_ENTRYPOINTS_HTTPS_HTTP_TLS_DOMAINS=${DOMAIN}"
-      - "TRAEFIK_ENTRYPOINTS_HTTPS_HTTP_TLS_DOMAINS=*.${DOMAIN}"
-      - "CF_API_EMAIL=${CF_API_EMAIL}"
-      - "CF_DNS_API_TOKEN=${CF_DNS_API_TOKEN}"
+      - CF_API_EMAIL=${CF_API_EMAIL}
+      - CF_DNS_API_TOKEN=${CF_DNS_API_TOKEN}
     volumes:
-      - "/etc/localtime:/etc/localtime"
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
-    command:
-      # Dashboard
-      - --api.dashboard
-      - --api.debug
-      - --api.insecure
-      # Entrypoints
-      - --entrypoints.web.address=:80
-      - --entrypoints.web.http.redirections.entrypoint.to=websecure
-      - --entrypoints.web.http.redirections.entrypoint.scheme=https
-      - --entrypoints.websecure.address=:443
-      - --entrypoints.websecure.http.tls=true
-      - --entrypoints.websecure.http.tls.certResolver=letsencrypt
-      - --entrypoints.websecure.http.tls.domains[0].main=${DOMAIN}
-      - --entrypoints.websecure.http.tls.domains[0].sans=*.${DOMAIN}
-      # ACME Config
-      - --certificatesresolvers.letsencrypt.acme.caserver=${CA_SERVER}
-      - --certificatesresolvers.letsencrypt.acme.email=${CF_API_EMAIL}
-      - --certificatesresolvers.letsencrypt.acme.storage=acme.json
-      - --certificatesresolvers.letsencrypt.acme.dnschallenge.provider=cloudflare
-      - --certificatesresolvers.letsencrypt.acme.dnschallenge.delayBeforeCheck=30
-      - --certificatesresolvers.letsencrypt.acme.dnschallenge.resolvers=9.9.9.9:53,1.1.1.1:53
-      # Servers Transport
-      - --tcpserverstransport.tls.insecureskipverify
-      # Providers
-      - --providers.docker
-      - --providers.docker.exposedbydefault=false
-      - --providers.docker.watch=true
-      - --providers.docker.network=proxy
-      # Access Logs
-      - --accesslog
+      - /etc/localtime:/etc/localtime
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - $HOME/traefik/config:/etc/traefik/
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.traefik.rule=Host(`traefik.${DOMAIN}`)"
-      - "traefik.http.routers.frontend.entrypoints=traefik"
+      - "traefik.http.routers.traefik.rule=Host(`${APP_DOMAIN}`)"
+      - "traefik.http.routers.frontend.entrypoints=websecure"
       - "traefik.http.routers.traefik.service=api@internal"
       - "traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto=https"
       - "traefik.http.routers.traefik.tls=true"
