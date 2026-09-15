@@ -1,0 +1,62 @@
+{
+  "AGENTS.md": {
+    "mtime": 1789439383.0911756,
+    "seen": 1789439704.6690822,
+    "ast_hash": "a919cb397be73eac2d1789a8ffa41428",
+    "semantic_hash": "a919cb397be73eac2d1789a8ffa41428"
+  },
+  "README.md": {
+    "mtime": 1789439383.0914845,
+    "seen": 1789439704.6690829,
+    "ast_hash": "4e4c61da79eb813dbcd2deae8adbd15e",
+    "semantic_hash": "4e4c61da79eb813dbcd2deae8adbd15e"
+  },
+  "compose/adguard/compose.yml": {
+    "mtime": 1789439383.0916111,
+    "seen": 1789439704.6690829,
+    "ast_hash": "d57fba3fd8cb2ef0d9c53ce81449e2be",
+    "semantic_hash": "d57fba3fd8cb2ef0d9c53ce81449e2be"
+  },
+  "compose/cloudflare-tunnel/compose.yml": {
+    "mtime": 1789439383.0917058,
+    "seen": 1789439704.6690838,
+    "ast_hash": "539cd429d71f4f971b8759351610843b",
+    "semantic_hash": "539cd429d71f4f971b8759351610843b"
+  },
+  "compose/portainer/compose.yml": {
+    "mtime": 1789439383.0917978,
+    "seen": 1789439704.6690838,
+    "ast_hash": "5488cf29af220d7611593e84d017349b",
+    "semantic_hash": "5488cf29af220d7611593e84d017349b"
+  },
+  "compose/prind/compose.yml": {
+    "mtime": 1789439383.0918813,
+    "seen": 1789439704.669085,
+    "ast_hash": "021abfb3806f1964bb9e0d21ad17678d",
+    "semantic_hash": "021abfb3806f1964bb9e0d21ad17678d"
+  },
+  "compose/traefik/compose.yml": {
+    "mtime": 1789439383.0919774,
+    "seen": 1789439704.669085,
+    "ast_hash": "3dc85ae9d2c013f098e7e6733fe5ebc7",
+    "semantic_hash": "3dc85ae9d2c013f098e7e6733fe5ebc7"
+  },
+  "compose/traefik/traefik.yml": {
+    "mtime": 1789439383.09205,
+    "seen": 1789439704.66909,
+    "ast_hash": "662582989acac0d2f11ad0e7eba866a0",
+    "semantic_hash": "662582989acac0d2f11ad0e7eba866a0"
+  },
+  "docs/agents/domain.md": {
+    "mtime": 1789439383.092294,
+    "seen": 1789439704.669091,
+    "ast_hash": "5c554b97de22d1765176bc82093ca190",
+    "semantic_hash": "5c554b97de22d1765176bc82093ca190"
+  },
+  "docs/agents/issue-tracker.md": {
+    "mtime": 1789439383.0925243,
+    "seen": 1789439704.6690922,
+    "ast_hash": "bc2168abde89351811b657336d84d00b",
+    "semantic_hash": "bc2168abde89351811b657336d84d00b"
+  }
+}
