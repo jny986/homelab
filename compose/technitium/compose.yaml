@@ -1,0 +1,56 @@
+---
+services:
+  technitium:
+    image: docker.io/technitium/dns-server:15.1.0
+    restart: unless-stopped
+    container_name: technitium
+    hostname: technitium
+    environment:
+      - DNS_SERVER_DOMAIN=dns.unicornestate.co
+      - DNS_SERVER_ADMIN_PASSWORD=${DNS_SERVER_ADMIN_PASSWORD}
+      - DNS_SERVER_LOG_FOLDER_PATH=/var/log/technitium/dns
+      - DNS_SERVER_LOG_USING_LOCAL_TIME=true
+      - DNS_SERVER_RECURSION=AllowOnlyForPrivateNetworks
+      - DNS_SERVER_FORWARDERS=1.1.1.1,9.9.9.9
+      - DNS_SERVER_FORWARDER_PROTOCOL=Udp
+      - DNS_SERVER_ENABLE_BLOCKING=true
+      - DNS_SERVER_OPTIONAL_PROTOCOL_DNS_OVER_HTTP=true
+    networks:
+      proxy:
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+    volumes:
+      - technitium_config:/etc/dns
+      - technitium_logs:/var/log/technitium/dns
+    sysctls:
+      - net.ipv4.ip_local_port_range=1024 65535
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=proxy
+      - traefik.http.services.technitium-web.loadBalancer.server.port=5380
+      - traefik.http.routers.technitium-http.service=technitium-web
+      - traefik.http.routers.technitium-http.rule=Host(`technitium.dns.unicornestate.co`)
+      - traefik.http.routers.technitium-http.entrypoints=web
+      - traefik.http.routers.technitium-https.service=technitium-web
+      - traefik.http.routers.technitium-https.rule=Host(`technitium.dns.unicornestate.co`)
+      - traefik.http.routers.technitium-https.entrypoints=websecure
+      - traefik.http.routers.technitium-https.tls=true
+      - traefik.http.routers.technitium-https.tls.certresolver=cloudflare
+      - traefik.http.services.technitium-doh.loadBalancer.server.port=80
+      - traefik.http.routers.technitium-doh.service=technitium-doh
+      - traefik.http.routers.technitium-doh.rule=Host(`technitium.dns.unicornestate.co`) && Path(`/dns-query`)
+      - traefik.http.routers.technitium-doh.entrypoints=websecure
+      - traefik.http.routers.technitium-doh.tls=true
+      - traefik.http.routers.technitium-doh.tls.certresolver=cloudflare
+      - traefik.http.routers.technitium-doh.priority=100
+
+networks:
+  proxy:
+    external: true
+
+volumes:
+  technitium_config:
+    driver: local
+  technitium_logs:
+    driver: local

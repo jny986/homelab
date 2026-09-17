@@ -1,0 +1,55 @@
+---
+services:
+  docker-socket-proxy:
+    image: tecnativa/docker-socket-proxy:latest
+    restart: unless-stopped
+    environment:
+      CONTAINERS: 1
+      IMAGES: 1
+      NETWORKS: 1
+      VOLUMES: 1
+      POST: 1
+      INFO: 1
+      PING: 1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - docker-proxy
+
+  arcane:
+    image: ghcr.io/getarcaneapp/manager:v2.1.0
+    restart: unless-stopped
+    environment:
+      APP_URL: "arcane.unicornestate.co"
+      ENCRYPTION_KEY: "${ARCANE_ENCRYPTION_KEY}"
+      JWT_SECRET: "${ARCANE_JWT_SECRET}"
+      TZ: "Australia/Adelaide"
+      ANALYTICS_DISABLED: "false"
+      DOCKER_HOST: "tcp://docker-socket-proxy:2375"
+    volumes:
+      - arcane-data:/app/data
+    networks:
+      - proxy
+      - docker-proxy
+    depends_on:
+      - docker-socket-proxy
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=proxy
+      - traefik.http.services.arcane-web.loadBalancer.server.port=3552
+      - traefik.http.routers.arcane-http.service=arcane-web
+      - traefik.http.routers.arcane-http.rule=Host(`arcane.unicornestate.co`)
+      - traefik.http.routers.arcane-http.entrypoints=web
+      - traefik.http.routers.arcane-https.service=arcane-web
+      - traefik.http.routers.arcane-https.rule=Host(`arcane.unicornestate.co`)
+      - traefik.http.routers.arcane-https.entrypoints=websecure
+      - traefik.http.routers.arcane-https.tls=true
+      - traefik.http.routers.arcane-https.tls.certresolver=cloudflare
+volumes:
+  arcane-data:
+    driver: local
+networks:
+  proxy:
+    external: true
+  docker-proxy:
+    internal: true

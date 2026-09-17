@@ -1,0 +1,59 @@
+---
+services:
+  traefik:
+    image: docker.io/library/traefik:v3.6.15
+    security_opt:
+      - no-new-privileges:true
+    command:
+      - "--global.checkNewVersion=false"
+      - "--global.sendAnonymousUsage=false"
+      - "--log.level=warn"
+      - "--ping=true"
+      - "--ping.entryPoint=ping"
+      - "--accesslog=true"
+      - "--api.dashboard=true"
+      - "--api.insecure=true"
+      - "--entrypoints.ping.address=:8082"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.web.http.encodedCharacters.allowEncodedSlash=true"
+      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.websecure.http.encodedCharacters.allowEncodedSlash=true"
+      - "--certificatesresolvers.cloudflare.acme.email=jny986@gmail.com"
+      - "--certificatesresolvers.cloudflare.acme.caServer=https://acme-v02.api.letsencrypt.org/directory"
+      - "--certificatesresolvers.cloudflare.acme.storage=/var/traefik/certs/acme.json"
+      - "--certificatesresolvers.cloudflare.acme.dnsChallenge.provider=cloudflare"
+      - "--certificatesresolvers.cloudflare.acme.dnsChallenge.resolvers=1.1.1.1:53,8.8.8.8:53"
+      - "--serversTransport.insecureSkipVerify=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedByDefault=false"
+      - "--providers.docker.network=proxy"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - traefik_certs:/var/traefik/certs/:rw
+    environment:
+      - TZ=Australia/Adelaide
+      - CF_DNS_API_TOKEN=${CF_DNS_API_TOKEN}
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:8082/ping"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - proxy
+    restart: unless-stopped
+
+networks:
+  proxy:
+    driver: bridge
+    name: proxy
+volumes:
+  traefik_certs:
+    driver: local
