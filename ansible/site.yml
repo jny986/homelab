@@ -1,0 +1,10 @@
+---
+# Placeholder playbook. Real bootstrap/configure roles land in later tickets.
+- name: Placeholder play
+  hosts: all
+  gather_facts: false
+
+  tasks:
+    - name: Report placeholder status
+      ansible.builtin.debug:
+        msg: "Placeholder play -- no configuration implemented yet."

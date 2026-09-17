@@ -1,0 +1,25 @@
+version: "3"
+
+tasks:
+  template:
+    desc: Build the Debian 12 VM template with Packer
+    dir: packer
+    cmds:
+      - packer build .
+
+  vm:
+    desc: Provision/update guest VMs with Terraform
+    cmds:
+      - terraform -chdir=terraform apply
+
+  configure:
+    desc: Configure guests with Ansible
+    cmds:
+      - ansible-playbook -i ansible/inventory ansible/site.yml
+
+  all:
+    desc: Full chain -- template, then vm, then configure
+    cmds:
+      - task: template
+      - task: vm
+      - task: configure

@@ -1,0 +1,9 @@
+[proxmox_nodes]
+# placeholder -- replaced by the Cluster bootstrap ticket
+node1.homelab.invalid
+
+[docker_host]
+# placeholder -- populated by the dynamic proxmox inventory plugin later
+
+[unifi_servers]
+# placeholder -- populated by the dynamic proxmox inventory plugin later
